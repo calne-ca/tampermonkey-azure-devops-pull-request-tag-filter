@@ -28,6 +28,7 @@ https://dev.azure.com/<org>\<project>/_git/<repo>/pullrequests?_a=active&tagFilt
 The script will remove all pull requests that are not tagged with either *Important* or *Coded With Love*.
 
 ## Installation
-Copy the content of the *script.js* file and paste it into a new script of your user scripts manager.
-With tampermonkey you can add a new script by clicking on the addon icon and hit the *Create a new script* button.
+The scripts requires you to have a user script manager addon like *Tampermonkey* or *Greasemonkey* installed in your browser.
+Copy the content of the *script.js* file and paste it into a new script of your user script manager.
+With Tampermonkey you can add a new script by clicking on the addon icon and hit the *Create a new script* button.
 It's pretty much the same for other user script managers.
