@@ -1,9 +1,10 @@
 // ==UserScript==
 // @name         Azure DevOps Pull Request Filter
-// @namespace    https://dev.azure.com/
+// @namespace    https://github.com/calne-ca
 // @version      0.1
 // @description  Filter pull Requests in Azure DevOps by tags
 // @author       Joscha Düringer
+// @supportURL   https://github.com/calne-ca/tampermonkey-azure-devops-pull-request-tag-filter
 // @match        https://dev.azure.com/*/pullrequests*
 // @icon         https://www.google.com/s2/favicons?domain=dev.azure.com
 // @grant        none
