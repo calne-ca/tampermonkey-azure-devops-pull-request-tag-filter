@@ -4,6 +4,13 @@ This scripts allows you to filter the pull request view of Azure Devops by tags 
 Just add a *tagFilter* query parameter to the URL of the pull request view you want to filter and save this URL as a bookmark to have easy access to your filtered pull request view.
 You can pass as many tags as you want to the parameter using a comma separated list.
 
+This script should work with all user script managers and browsers.<br>
+I tested it with Google Chrome (OSX) / Mozilla Firefox (OSX) as browsers and [Tampermonkey](https://www.tampermonkey.net/) / Greasemonkey as user script managers.
+
+The script works by scanning the DOM in a set interval, scanning for the pull requests elements and removing them from the DOM.
+It works this way because the pull requests are fetched and added to the DOM dynamically by Azuree DevOps.
+Because of this, pull requests might be visible for a split second before the script removes them.
+
 ## Example
 Aussimging you have the following URL:
 
