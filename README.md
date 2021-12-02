@@ -11,7 +11,7 @@ The script works by scanning the DOM in a set interval, scanning for the pull re
 It works this way because the pull requests are fetched and added to the DOM dynamically by Azure DevOps.
 Because of this, pull requests might be visible for a split second before the script removes them.
 
-## Example
+## Usage
 Assuming you have the following URL:
 
 ```
