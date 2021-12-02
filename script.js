@@ -1,11 +1,10 @@
 // ==UserScript==
 // @name         Azure DevOps Pull Request Filter
 // @namespace    https://github.com/calne-ca
-// @version      0.1
+// @version      0.2
 // @description  Filter pull Requests in Azure DevOps by tags
 // @author       Joscha Düringer
 // @supportURL   https://github.com/calne-ca/tampermonkey-azure-devops-pull-request-tag-filter
-// @license      MIT
 // @match        https://dev.azure.com/*/pullrequests*
 // @icon         https://www.google.com/s2/favicons?domain=dev.azure.com
 // @grant        none
@@ -24,20 +23,53 @@ function adjustRowSpacers() {
     }
 }
 
-function filterPullRequests(pullRequests, filteredTags){
-    console.log("Filtering for pull requests with tags '" + filteredTags + "'");
+function stringMatchesFilter(str, filter) {
+    return filter.some(filterStr=> new RegExp("^" + filterStr + "$").test(str));
+}
 
+function pullRequestHasMatchingTag(pullRequest, filteredTags, showUntagged) {
+    if(filteredTags.length === 0) {
+        return true;
+    }
+
+    const labels = pullRequest.querySelectorAll('.bolt-pill-overflow .text-ellipsis');
+    const pullRequestLabels = []
+
+    if(labels.length === 0 && showUntagged) {
+        return true;
+    }
+
+    for (const label of labels) {
+        pullRequestLabels.push(label.textContent);
+    }
+
+    return pullRequestLabels.some(tag=> stringMatchesFilter(tag, filteredTags));
+}
+
+function pullRequestHasMatchingTitle(pullRequest, filteredTitles) {
+    if(filteredTitles.length === 0){
+        return true;
+    }
+
+    const title = pullRequest.querySelector('.body-l').textContent;
+
+    return stringMatchesFilter(title, filteredTitles);
+}
+
+function pullRequestHasAssignee(pullRequest){
+    const assignees = pullRequest.querySelectorAll('.bolt-table-cell-content .flex-center img');
+    return assignees.length > 0;
+}
+
+function pullRequestShouldBeRemoved(pullRequest, filteredTags, showUntagged, filteredTitles, unassignedOnly) {
+    return !pullRequestHasMatchingTag(pullRequest, filteredTags, showUntagged) ||
+        !pullRequestHasMatchingTitle(pullRequest, filteredTitles) ||
+        (unassignedOnly && pullRequestHasAssignee(pullRequest));
+}
+
+function filterPullRequests(pullRequests, filteredTags, showUntagged, filteredTitles, unassignedOnly){
     for (const pullRequest of pullRequests) {
-        const labels = pullRequest.querySelectorAll('.bolt-pill-overflow .text-ellipsis');
-        const pullRequestLabels = []
-
-        for (const label of labels) {
-            pullRequestLabels.push(label.textContent);
-        }
-
-        var pullRequestHasFilteredLabel = pullRequestLabels.some(tag=> filteredTags.includes(tag));
-
-        if (!pullRequestHasFilteredLabel) {
+        if (pullRequestShouldBeRemoved(pullRequest, filteredTags, showUntagged, filteredTitles, unassignedOnly)) {
             removePullRequest(pullRequest)
         }
     }
@@ -50,19 +82,27 @@ function filterPullRequests(pullRequests, filteredTags){
 
     const urlParams = new URLSearchParams(window.location.search);
     const tagFilterParam = urlParams.get('tagFilter');
+    const titleFilterParam = urlParams.get('titleFilter');
+    const showUntaggedParam = urlParams.get('showUntagged');
+    const unassignedOnlyParam = urlParams.get('unassignedOnly');
     const refreshInterval = 200;
 
-    const filteredTags = tagFilterParam.split(',');
+    const filteredTags = tagFilterParam ? tagFilterParam.split(',') : [];
+    const filteredTitles = titleFilterParam ? titleFilterParam.split(',') : [];
+    const showUntagged = showUntaggedParam === 'true'
+    const unassignedOnly = unassignedOnlyParam === 'true'
 
-    if(!filteredTags) {
+    if(filteredTags.length === 0 && filteredTitles.length === 0 && !unassignedOnly) {
         return;
     }
+
+    console.log("Filtering pull requests with filteredTags='" + filteredTags + "', showUntagged='" + showUntagged + "', filteredTitles='" + filteredTitles + "', unassignedOnly='" + unassignedOnly + "'");
 
     setInterval(function() {
         const pullRequests = document.getElementsByClassName('bolt-list-row');
 
         if (pullRequests) {
-            filterPullRequests(pullRequests, filteredTags);
+            filterPullRequests(pullRequests, filteredTags, showUntagged, filteredTitles, unassignedOnly);
         }
     }, refreshInterval);
 })();
