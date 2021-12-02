@@ -4,7 +4,7 @@
 // @version      0.2
 // @description  Filter pull Requests in Azure DevOps by tags
 // @author       Joscha Düringer
-// @author       MIT
+// @license      MIT
 // @supportURL   https://github.com/calne-ca/tampermonkey-azure-devops-pull-request-tag-filter
 // @match        https://dev.azure.com/*/pullrequests*
 // @icon         https://www.google.com/s2/favicons?domain=dev.azure.com
