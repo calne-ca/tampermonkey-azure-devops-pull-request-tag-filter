@@ -29,6 +29,9 @@ The script will remove all pull requests that are not tagged with either *Import
 
 ## Installation
 The scripts requires you to have a user script manager addon like *Tampermonkey* or *Greasemonkey* installed in your browser.
-Copy the content of the *script.js* file and paste it into a new script of your user script manager.
+
+You can install this script using [this link](https://greasyfork.org/scripts/436418-azure-devops-pull-request-filter/code/Azure%20DevOps%20Pull%20Request%20Filter.user.js).
+
+Alternetively, you can install it manually by copying the content of the *script.js* file and paste it into a new script of your user script manager.
 With Tampermonkey you can add a new script by clicking on the addon icon and hit the *Create a new script* button.
 It's pretty much the same for other user script managers.
