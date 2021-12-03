@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Azure DevOps Pull Request Filter
 // @namespace    https://github.com/calne-ca
-// @version      0.2
+// @version      0.2.1
 // @description  Filter pull Requests in Azure DevOps by tags
 // @author       Joscha Düringer
 // @license      MIT
@@ -100,6 +100,12 @@ function filterPullRequests(pullRequests, filteredTags, showUntagged, filteredTi
     console.log("Filtering pull requests with filteredTags='" + filteredTags + "', showUntagged='" + showUntagged + "', filteredTitles='" + filteredTitles + "', unassignedOnly='" + unassignedOnly + "'");
 
     setInterval(function() {
+        const path = window.location.pathname.replace(/\/$/, "");
+
+        if(!path.endsWith('pullrequests')) {
+            return;
+        }
+
         const pullRequests = document.getElementsByClassName('bolt-list-row');
 
         if (pullRequests) {
